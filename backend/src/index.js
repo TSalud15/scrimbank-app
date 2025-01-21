@@ -13,11 +13,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // middleware
+app.use("/api/webhooks", webhookRoutes);
 app.use(express.json()); // parse req.body
 app.use(clerkMiddleware());
 
 // api routes
-app.use("/api/webhooks", webhookRoutes);
 
 app.listen(PORT, () => {
     connectDB();
