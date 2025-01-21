@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
         practiceSessions: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "PracticeSession",
+                ref: "Session",
             },
         ],
     },
