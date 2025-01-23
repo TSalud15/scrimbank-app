@@ -21,12 +21,6 @@ const userSchema = new mongoose.Schema(
             type: String,
             default: "",
         },
-        practiceSessions: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Session",
-            },
-        ],
     },
     {
         timestamps: true,
