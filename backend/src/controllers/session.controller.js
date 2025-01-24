@@ -1,4 +1,6 @@
+import { User } from "../models/user.model.js";
 import { Session } from "../models/session.model.js";
+
 export const createPracticeSession = async (req, res) => {
     try {
         // check if user is authenticated
@@ -19,7 +21,7 @@ export const createPracticeSession = async (req, res) => {
 
         // create and save practice session to db
         const newPracticeSession = new Session({
-            userId,
+            ownerId: userId,
             name,
             date,
             goals,
@@ -32,7 +34,36 @@ export const createPracticeSession = async (req, res) => {
     } catch (error) {
         return res
             .status(400)
-            .json({ message: "Error creating practice session" });
+            .json({ message: "Server error: Error creating practice session" });
+    }
+};
+
+export const getPracticeSession = async (req, res) => {
+    try {
+        // check if user is authenticated
+        const userId = req.auth.clerkId;
+
+        if (!userId) {
+            return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const { sessionId } = req.params;
+
+        // get practice session from db
+        const practiceSession = await Session.findOne({
+            _id: sessionId,
+            ownerId: userId,
+        });
+
+        if (!practiceSession) {
+            return res.status(404).json({ message: "Session not found" });
+        }
+
+        return res.status(200).json(practiceSession);
+    } catch (error) {
+        return res
+            .status(400)
+            .json({ message: "Server error: Error getting practice session" });
     }
 };
 
@@ -54,6 +85,21 @@ export const deletePracticeSession = async (req, res) => {
 
         // TODO: delete scrims in session logic
 
-        await Session.findByIdAndDelete(sessionId); // delete practice session in db
-    } catch (error) {}
+        // delete practice session in db
+        const deletedSession = await Session.findOneAndDelete({
+            _id: sessionId,
+            ownerId: userId,
+        });
+
+        // check if session was deleted
+        if (!deletedSession) {
+            return res
+                .status(403)
+                .json({ message: "You do not own this session" });
+        }
+    } catch (error) {
+        return res
+            .status(400)
+            .json({ message: "Server error: Error deleting practice session" });
+    }
 };
