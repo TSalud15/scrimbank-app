@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 
-import { clerkMiddleware } from "@clerk/express";
+import { clerkMiddleware, requireAuth } from "@clerk/express";
 import connectDB from "./config/db.js";
 
 import webhookRoutes from "./routes/webhook.route.js";
@@ -19,7 +19,7 @@ app.use(express.json()); // parse req.body
 app.use(clerkMiddleware());
 
 // api routes
-app.use("/api/sessions", sessionRoutes);
+app.use("/api/sessions", requireAuth(), sessionRoutes);
 
 app.listen(PORT, () => {
     connectDB();

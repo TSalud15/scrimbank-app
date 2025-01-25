@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema(
     {
-        ownerId: {
-            type: String,
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
             required: true,
         },
         name: {
@@ -15,12 +16,10 @@ const sessionSchema = new mongoose.Schema(
             required: true,
         },
         goals: [String],
-        scrims: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Scrim",
-            },
-        ],
+        scrims: {
+            type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Scrim" }],
+            default: [],
+        },
     },
     { timestamps: true }
 );

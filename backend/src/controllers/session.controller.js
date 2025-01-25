@@ -1,14 +1,16 @@
-import { User } from "../models/user.model.js";
-import { Session } from "../models/session.model.js";
+import Session from "../models/session.model.js";
+import User from "../models/user.model.js";
 
 export const createPracticeSession = async (req, res) => {
     try {
         // check if user is authenticated
-        const userId = req.auth.clerkId;
+        const clerkId = req.auth.clerkId;
 
-        if (!userId) {
+        if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
         }
+
+        const user = await User.findOne({ clerkId });
 
         const { name, date, goals } = req.body;
 
@@ -21,7 +23,7 @@ export const createPracticeSession = async (req, res) => {
 
         // create and save practice session to db
         const newPracticeSession = new Session({
-            ownerId: userId,
+            user,
             name,
             date,
             goals,
@@ -30,11 +32,12 @@ export const createPracticeSession = async (req, res) => {
 
         await newPracticeSession.save();
 
-        return res.status(201).json(newPracticeSession);
+        res.status(201).json(newPracticeSession);
     } catch (error) {
-        return res
-            .status(400)
-            .json({ message: "Server error: Error creating practice session" });
+        console.log("Error creating practice session: ", error.message);
+        res.status(500).json({
+            message: "Internal server error",
+        });
     }
 };
 
@@ -49,32 +52,101 @@ export const getPracticeSession = async (req, res) => {
 
         const { sessionId } = req.params;
 
+        if (!sessionId) {
+            return res.status(400).json({ message: "Session ID not provided" });
+        }
+
         // get practice session from db
-        const practiceSession = await Session.findOne({
-            _id: sessionId,
-            ownerId: userId,
-        });
+        const practiceSession = await Session.findById(sessionId);
 
         if (!practiceSession) {
             return res.status(404).json({ message: "Session not found" });
         }
 
-        return res.status(200).json(practiceSession);
+        res.status(200).json(practiceSession);
+    } catch (error) {
+        console.log("Error getting practice session: ", error.message);
+        res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+};
+
+export const getPracticeSessions = async (req, res) => {
+    try {
+        const clerkId = req.auth.clerkId;
+
+        if (!clerkId) {
+            return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const user = await User.findOne({ clerkId });
+
+        // get practice sessions from db
+        const practiceSessions = await Session.find({ user: user._id });
+
+        res.status(200).json(practiceSessions);
     } catch (error) {
         return res
             .status(400)
-            .json({ message: "Server error: Error getting practice session" });
+            .json({ message: "Server error: Error getting practice sessions" });
+    }
+};
+
+export const updatePracticeSession = async (req, res) => {
+    try {
+        // check user is authenticated
+        const clerkId = req.auth.clerkId;
+
+        if (!clerkId) {
+            return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const user = await User.findOne({ clerkId });
+
+        const { sessionId } = req.params;
+
+        const { name, date, goals, scrims } = req.body;
+
+        const session = await Session.findById(sessionId);
+
+        if (!session) {
+            return res.status(404).json({ message: "Session not found" });
+        }
+
+        if (!session.user.equals(user._id)) {
+            return res
+                .status(403)
+                .json({ message: "You do not own this session" });
+        }
+
+        // update session data
+        session.name = name || session.name;
+        session.date = date || session.date;
+        session.goals = goals || session.goals;
+        session.scrims = scrims || session.scrims;
+
+        await session.save();
+
+        res.status(200).json(session);
+    } catch (error) {
+        console.log("Error updating practice session: ", error.message);
+        res.status(500).json({
+            message: "Internal server error",
+        });
     }
 };
 
 export const deletePracticeSession = async (req, res) => {
     try {
         // check user is authenticated
-        const userId = req.auth.clerkId;
+        const clerkId = req.auth.clerkId;
 
-        if (!userId) {
+        if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
         }
+
+        const user = await User.findOne({ clerkId });
 
         const { sessionId } = req.params;
 
@@ -85,21 +157,22 @@ export const deletePracticeSession = async (req, res) => {
 
         // TODO: delete scrims in session logic
 
-        // delete practice session in db
+        // delete practice session in db if user owns it
         const deletedSession = await Session.findOneAndDelete({
             _id: sessionId,
-            ownerId: userId,
+            user: user._id,
         });
 
         // check if session was deleted
         if (!deletedSession) {
-            return res
-                .status(403)
-                .json({ message: "You do not own this session" });
+            res.status(403).json({ message: "You do not own this session" });
         }
+
+        return res.status(200).json(deletedSession);
     } catch (error) {
-        return res
-            .status(400)
-            .json({ message: "Server error: Error deleting practice session" });
+        console.log("Error deleting practice session: ", error.message);
+        res.status(500).json({
+            message: "Internal server error",
+        });
     }
 };
