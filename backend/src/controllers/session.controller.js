@@ -23,7 +23,7 @@ export const createPracticeSession = async (req, res) => {
 
         // create and save practice session to db
         const newPracticeSession = new Session({
-            user,
+            user: user._id,
             name,
             date,
             goals,
@@ -82,7 +82,7 @@ export const getPracticeSessions = async (req, res) => {
 
         const user = await User.findOne({ clerkId });
 
-        // get practice sessions from db
+        // get practice sessions from db that belong to user
         const practiceSessions = await Session.find({ user: user._id });
 
         res.status(200).json(practiceSessions);
@@ -155,20 +155,21 @@ export const deletePracticeSession = async (req, res) => {
             return res.status(400).json({ message: "Session ID is required" });
         }
 
+        const session = await Session.findById(sessionId);
+
+        if (!session.user.equals(user._id))
+            return res
+                .status(403)
+                .json({ message: "You do not own this practice session" });
+
         // TODO: delete scrims in session logic
 
         // delete practice session in db if user owns it
-        const deletedSession = await Session.findOneAndDelete({
-            _id: sessionId,
-            user: user._id,
+        await Session.findByIdAndDelete(sessionId);
+
+        return res.status(200).json({
+            message: "Practice session deleted successfully",
         });
-
-        // check if session was deleted
-        if (!deletedSession) {
-            res.status(403).json({ message: "You do not own this session" });
-        }
-
-        return res.status(200).json(deletedSession);
     } catch (error) {
         console.log("Error deleting practice session: ", error.message);
         res.status(500).json({
