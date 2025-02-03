@@ -1,3 +1,4 @@
+import Scrim from "../models/scrim.model.js";
 import Session from "../models/session.model.js";
 import User from "../models/user.model.js";
 
@@ -162,7 +163,9 @@ export const deletePracticeSession = async (req, res) => {
                 .status(403)
                 .json({ message: "You do not own this practice session" });
 
-        // TODO: delete scrims in session logic
+        // delete scrims of this practice session in db
+        const scrimIds = session.scrims;
+        await Scrim.deleteMany({ _id: { $in: scrimIds } });
 
         // delete practice session in db if user owns it
         await Session.findByIdAndDelete(sessionId);
