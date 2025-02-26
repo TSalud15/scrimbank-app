@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const scrimSchema = new mongoose.Schema(
     {
-        user: {
+        session: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
+            ref: "Session",
             required: true,
         },
         name: {
@@ -66,6 +66,14 @@ const scrimSchema = new mongoose.Schema(
             default: 0,
             min: 0,
             max: 24,
+        },
+        screenshots: {
+            type: [String],
+            default: [],
+        },
+        videos: {
+            type: [String],
+            default: [],
         },
     },
     { timestamps: true }

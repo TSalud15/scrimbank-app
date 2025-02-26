@@ -8,7 +8,6 @@ import {
 
 const router = express.Router();
 
-router.post("/", createScrim);
 router.get("/:scrimId", getScrim);
 router.patch("/:scrimId", updateScrim);
 router.delete("/:scrimId", deleteScrim);

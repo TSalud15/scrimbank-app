@@ -13,10 +13,10 @@ export const createPracticeSession = async (req, res) => {
 
         const user = await User.findOne({ clerkId });
 
-        const { name, date, goals } = req.body;
+        const { name, date } = req.body;
 
         // check that all required fields are provided
-        if (!name || !date || !goals) {
+        if (!name || !date) {
             return res
                 .status(400)
                 .json({ message: "Please provide all required fields" });
@@ -27,8 +27,6 @@ export const createPracticeSession = async (req, res) => {
             user: user._id,
             name,
             date,
-            goals,
-            scrims: [],
         });
 
         await newPracticeSession.save();
@@ -107,7 +105,7 @@ export const updatePracticeSession = async (req, res) => {
 
         const { sessionId } = req.params;
 
-        const { name, date, goals, scrims } = req.body;
+        const { name, date } = req.body;
 
         const session = await Session.findById(sessionId);
 
@@ -124,8 +122,6 @@ export const updatePracticeSession = async (req, res) => {
         // update session data
         session.name = name || session.name;
         session.date = date || session.date;
-        session.goals = goals || session.goals;
-        session.scrims = scrims || session.scrims;
 
         await session.save();
 
@@ -162,10 +158,6 @@ export const deletePracticeSession = async (req, res) => {
             return res
                 .status(403)
                 .json({ message: "You do not own this practice session" });
-
-        // delete scrims of this practice session in db
-        const scrimIds = session.scrims;
-        await Scrim.deleteMany({ _id: { $in: scrimIds } });
 
         // delete practice session in db if user owns it
         await Session.findByIdAndDelete(sessionId);

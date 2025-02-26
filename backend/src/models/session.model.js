@@ -15,11 +15,6 @@ const sessionSchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
-        goals: [String],
-        scrims: {
-            type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Scrim" }],
-            default: [],
-        },
     },
     { timestamps: true }
 );
