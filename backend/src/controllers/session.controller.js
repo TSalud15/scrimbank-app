@@ -24,7 +24,7 @@ export const createPracticeSession = async (req, res) => {
 
         // create and save practice session to db
         const newPracticeSession = new Session({
-            user: user._id,
+            userId: user._id,
             name,
             date,
         });
@@ -82,7 +82,7 @@ export const getPracticeSessions = async (req, res) => {
         const user = await User.findOne({ clerkId });
 
         // get practice sessions from db that belong to user
-        const practiceSessions = await Session.find({ user: user._id });
+        const practiceSessions = await Session.find({ userId: user._id });
 
         res.status(200).json(practiceSessions);
     } catch (error) {
@@ -113,7 +113,7 @@ export const updatePracticeSession = async (req, res) => {
             return res.status(404).json({ message: "Session not found" });
         }
 
-        if (!session.user.equals(user._id)) {
+        if (!session.userId.equals(user._id)) {
             return res
                 .status(403)
                 .json({ message: "You do not own this session" });
@@ -154,7 +154,7 @@ export const deletePracticeSession = async (req, res) => {
 
         const session = await Session.findById(sessionId);
 
-        if (!session.user.equals(user._id))
+        if (!session.userId.equals(user._id))
             return res
                 .status(403)
                 .json({ message: "You do not own this practice session" });

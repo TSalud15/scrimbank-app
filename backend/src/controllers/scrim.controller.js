@@ -1,6 +1,20 @@
+import cloudinary from "../config/cloudinary.js";
 import Scrim from "../models/scrim.model.js";
 import Session from "../models/session.model.js";
 import User from "../models/user.model.js";
+
+// helper function for cloudinary uploads
+const uploadToCloudinary = async (file) => {
+    try {
+        const result = await cloudinary.uploader.upload(file.tempFilePath, {
+            resource_type: "auto",
+        });
+        return result.secure_url;
+    } catch (error) {
+        console.log("Error in uploadToCloudinary", error);
+        throw new Error("Error uploading to cloudinary");
+    }
+};
 
 export const createScrim = async (req, res) => {
     try {
@@ -108,18 +122,30 @@ export const updateScrim = async (req, res) => {
             opponentComp,
             yourScore,
             opponentScore,
-            screenshots,
             videos,
         } = req.body;
+
+        const screenshots = req.files?.screenshots;
 
         const scrim = await Scrim.findById(scrimId);
 
         if (!scrim) return res.status(404).json({ message: "Scrim not found" });
 
-        if (!scrim.user.equals(user._id))
-            return res
-                .status(403)
-                .json({ message: "You do not own this scrim" });
+        const session = await Session.findById(scrim.sessionId);
+
+        if (!session.userId.equals(user._id))
+            return res.status(403).json({
+                message: "Only the owner of the practice session can edit it",
+            });
+
+        // upload screenshots to cloudinary and update scrim in db
+        if (screenshots) {
+            const screenshotUrls = await Promise.all(
+                screenshots.map((screenshot) => uploadToCloudinary(screenshot))
+            );
+
+            scrim.screenshots.push(...screenshotUrls);
+        }
 
         // update scrim data
         scrim.name = name || scrim.name;
@@ -130,7 +156,6 @@ export const updateScrim = async (req, res) => {
         scrim.opponentComp = opponentComp || scrim.opponentComp;
         scrim.yourScore = yourScore || scrim.yourScore;
         scrim.opponentScore = opponentScore || scrim.opponentScore;
-        scrim.screenshots = screenshots || scrim.screenshots;
         scrim.videos = videos || scrim.videos;
 
         await scrim.save();
@@ -164,14 +189,12 @@ export const deleteScrim = async (req, res) => {
 
         if (!scrim) return res.status(404).json({ message: "Scrim not found" });
 
-        const session = await Session.findById(scrim.session);
+        const session = await Session.findById(scrim.sessionId);
 
-        if (!session.user.equals(user._id))
-            return res
-                .status(403)
-                .json({
-                    message: "Only the owner can modify the practice session",
-                });
+        if (!session.userId.equals(user._id))
+            return res.status(403).json({
+                message: "Only the owner can modify the practice session",
+            });
 
         // delete scrim in db if user owns it
         await Scrim.findByIdAndDelete(scrimId);

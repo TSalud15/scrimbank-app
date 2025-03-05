@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const scrimSchema = new mongoose.Schema(
     {
-        session: {
+        sessionId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Session",
             required: true,
