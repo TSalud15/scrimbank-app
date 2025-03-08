@@ -19,7 +19,7 @@ const uploadToCloudinary = async (file) => {
 export const createScrim = async (req, res) => {
     try {
         // check if user is authenticated
-        const clerkId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
@@ -28,6 +28,18 @@ export const createScrim = async (req, res) => {
         const user = await User.findOne({ clerkId });
 
         const { sessionId } = req.params;
+
+        const session = await Session.findById(sessionId);
+
+        if (!session) {
+            return res.status(404).json({ message: "Session not found" });
+        }
+
+        if (!session.userId.equals(user._id)) {
+            return res.status(403).json({
+                message: "Only the owner of the session may create a scrim",
+            });
+        }
 
         const { name, map, goals, notes } = req.body;
 
@@ -71,13 +83,11 @@ export const createScrim = async (req, res) => {
 export const getScrim = async (req, res) => {
     try {
         // check if user is authenticated
-        const clerkId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
         }
-
-        const user = await User.findOne({ clerkId });
 
         const { scrimId } = req.params;
 
@@ -100,7 +110,7 @@ export const getScrim = async (req, res) => {
 export const updateScrim = async (req, res) => {
     try {
         // check user is authenticated
-        const clerkId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
@@ -172,7 +182,7 @@ export const updateScrim = async (req, res) => {
 export const deleteScrim = async (req, res) => {
     try {
         // check user is authenticated
-        const clerkId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });

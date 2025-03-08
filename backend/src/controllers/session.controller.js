@@ -5,7 +5,7 @@ import User from "../models/user.model.js";
 export const createPracticeSession = async (req, res) => {
     try {
         // check if user is authenticated
-        const clerkId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
@@ -43,7 +43,7 @@ export const createPracticeSession = async (req, res) => {
 export const getPracticeSession = async (req, res) => {
     try {
         // check if user is authenticated
-        const userId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!userId) {
             return res.status(401).json({ message: "User not authenticated" });
@@ -73,7 +73,7 @@ export const getPracticeSession = async (req, res) => {
 
 export const getPracticeSessions = async (req, res) => {
     try {
-        const clerkId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
@@ -95,7 +95,7 @@ export const getPracticeSessions = async (req, res) => {
 export const updatePracticeSession = async (req, res) => {
     try {
         // check user is authenticated
-        const clerkId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
@@ -137,7 +137,7 @@ export const updatePracticeSession = async (req, res) => {
 export const deletePracticeSession = async (req, res) => {
     try {
         // check user is authenticated
-        const clerkId = req.auth.clerkId;
+        const clerkId = req.auth.userId;
 
         if (!clerkId) {
             return res.status(401).json({ message: "User not authenticated" });
