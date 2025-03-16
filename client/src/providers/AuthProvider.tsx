@@ -11,7 +11,7 @@ const updateApiToken = (token: string | null) => {
 };
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const { getToken } = useAuth();
+    const { getToken, isLoaded } = useAuth();
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         initAuth();
     }, [getToken]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading || !isLoaded) return <div>Loading...</div>;
     return <div>{children}</div>;
 };
 export default AuthProvider;
