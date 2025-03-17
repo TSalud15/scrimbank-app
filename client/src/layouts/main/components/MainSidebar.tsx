@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Archive, Settings } from "lucide-react";
 
 import {
     Sidebar,
@@ -11,29 +11,15 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { UserButton } from "@clerk/clerk-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 // Menu items.
 const items = [
     {
-        title: "Home",
-        url: "#",
-        icon: Home,
-    },
-    {
-        title: "Inbox",
-        url: "#",
-        icon: Inbox,
-    },
-    {
-        title: "Calendar",
-        url: "#",
-        icon: Calendar,
-    },
-    {
-        title: "Search",
-        url: "#",
-        icon: Search,
+        title: "Practice Sessions",
+        url: "/dashboard",
+        icon: Archive,
     },
     {
         title: "Settings",
@@ -44,7 +30,7 @@ const items = [
 
 const MainSidebar = () => {
     return (
-        <Sidebar>
+        <Sidebar className="top-[--header-height] !h-[calc(100svh-var(--header-height))]">
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>Application</SidebarGroupLabel>
@@ -53,10 +39,10 @@ const MainSidebar = () => {
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
+                                        <Link to={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
@@ -65,7 +51,13 @@ const MainSidebar = () => {
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-                <UserButton />
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild>
+                            <Button>Upgrade to Pro</Button>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
             </SidebarFooter>
         </Sidebar>
     );
