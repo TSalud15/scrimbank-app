@@ -26,9 +26,7 @@ const MainLayout = () => {
                 <div className="flex flex-1">
                     <MainSidebar />
                     <SidebarInset>
-                        <main>
-                            <Outlet />
-                        </main>
+                        <Outlet />
                     </SidebarInset>
                 </div>
             </SidebarProvider>

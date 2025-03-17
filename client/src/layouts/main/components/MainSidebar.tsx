@@ -33,7 +33,7 @@ const MainSidebar = () => {
         <Sidebar className="top-[--header-height] !h-[calc(100svh-var(--header-height))]">
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    {/* <SidebarGroupLabel>Application</SidebarGroupLabel> */}
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
