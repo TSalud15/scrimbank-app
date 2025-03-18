@@ -13,7 +13,7 @@ export const createPracticeSession = async (req, res) => {
 
         const user = await User.findOne({ clerkId });
 
-        const { name, date, description } = req.body;
+        const { name, date } = req.body;
 
         // check that all required fields are provided
         if (!name || !date) {
@@ -27,7 +27,6 @@ export const createPracticeSession = async (req, res) => {
             userId: user._id,
             name,
             date,
-            description,
         });
 
         await newPracticeSession.save();
@@ -106,7 +105,7 @@ export const updatePracticeSession = async (req, res) => {
 
         const { sessionId } = req.params;
 
-        const { name, date, description } = req.body;
+        const { name, date } = req.body;
 
         const session = await Session.findById(sessionId);
 
@@ -123,7 +122,6 @@ export const updatePracticeSession = async (req, res) => {
         // update session data
         session.name = name || session.name;
         session.date = date || session.date;
-        session.description = description || session.description;
 
         await session.save();
 

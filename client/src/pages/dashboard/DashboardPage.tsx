@@ -6,25 +6,19 @@ const DashboardPage = () => {
     return (
         <main className="flex flex-1 flex-col overflow-auto p-4 gap-5">
             <div className="flex justify-between items-center">
-                <span className="font-semibold text-lg md:text-2xl">
-                    My Practice Sessions
-                </span>
+                <h1 className="font-semibold text-2xl">My Practice Sessions</h1>
                 <div>
                     <Button className="rounded-full bg-red-400 hover:bg-red-300">
-                        <Plus size={16} color="#262626" />
+                        <Plus size={16} />
                         New Session
                     </Button>
                 </div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-auto gap-4">
-                <SessionCard
-                    name="Practice Session"
-                    date={new Date()}
-                    isLoading={false}
-                />
-                <div className="flex justify-center items-center rounded-xl bg-transparent border-2 border-dashed h-20 w-full hover:bg-secondary hover:cursor-pointer">
-                    <span>Create new session</span>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <SessionCard name="Practice Session" date={new Date()} />
+                <SessionCard name="Practice Session 2" date={new Date()} />
+                <SessionCard name="Practice Session 3" date={new Date()} />
+                <SessionCard name="Practice Session 4" date={new Date()} />
             </div>
         </main>
     );
