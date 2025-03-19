@@ -25,7 +25,6 @@ type SessionCardProps = {
 };
 
 const SessionCard = ({ name, date }: SessionCardProps) => {
-    console.log("date type: ", typeof date);
     return (
         <Card>
             <CardHeader>
