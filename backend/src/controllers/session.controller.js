@@ -1,4 +1,3 @@
-import Scrim from "../models/scrim.model.js";
 import Session from "../models/session.model.js";
 import User from "../models/user.model.js";
 
@@ -12,6 +11,10 @@ export const createPracticeSession = async (req, res) => {
         }
 
         const user = await User.findOne({ clerkId });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
         const { name, date } = req.body;
 
