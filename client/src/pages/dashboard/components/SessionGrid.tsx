@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import SessionCard from "./SessionCard";
 import SessionGridSkeleton from "./SessionGridSkeleton";
+import { PracticeSession } from "@/types";
 
 type SessionGridProps = {
-    practiceSessions: any[];
+    practiceSessions: PracticeSession[];
     isLoading: boolean;
 };
 
@@ -13,11 +14,7 @@ const SessionGrid = ({ practiceSessions, isLoading }: SessionGridProps) => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {practiceSessions.map((session) => (
-                <SessionCard
-                    key={session._id}
-                    name={session.name}
-                    date={new Date(session.date)}
-                />
+                <SessionCard key={session._id} session={session} />
             ))}
 
             <Button

@@ -17,19 +17,24 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { useSessionStore } from "@/stores/useSessionStore";
+import { PracticeSession } from "@/types";
 import { Pencil, Trash2 } from "lucide-react";
 
 type SessionCardProps = {
-    name: string;
-    date: Date;
+    session: PracticeSession;
 };
 
-const SessionCard = ({ name, date }: SessionCardProps) => {
+const SessionCard = ({ session }: SessionCardProps) => {
+    const { deletePracticeSession } = useSessionStore();
+
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="text-xl">{name}</CardTitle>
-                <CardDescription>{date.toLocaleDateString()}</CardDescription>
+                <CardTitle className="text-xl">{session.name}</CardTitle>
+                <CardDescription>
+                    {new Date(session.date).toLocaleDateString()}
+                </CardDescription>
             </CardHeader>
             <CardFooter>
                 <div className="flex gap-2">
@@ -58,7 +63,11 @@ const SessionCard = ({ name, date }: SessionCardProps) => {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction>
+                                <AlertDialogAction
+                                    onClick={() =>
+                                        deletePracticeSession(session._id)
+                                    }
+                                >
                                     Yes, delete this session
                                 </AlertDialogAction>
                             </AlertDialogFooter>

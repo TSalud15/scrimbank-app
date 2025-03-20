@@ -14,7 +14,7 @@ const Topbar = () => {
                     <Button
                         variant="ghost"
                         size="sm"
-                        className="md:text-lg text-base"
+                        className="text-lg"
                         asChild
                     >
                         <Link to="/dashboard">ScrimBank</Link>

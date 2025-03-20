@@ -84,8 +84,10 @@ export const getPracticeSessions = async (req, res) => {
 
         const user = await User.findOne({ clerkId });
 
-        // get practice sessions from db that belong to user
-        const practiceSessions = await Session.find({ userId: user._id });
+        // get practice sessions from db that belong to user in descending order (newest first)
+        const practiceSessions = await Session.find({ userId: user._id }).sort({
+            createdAt: -1,
+        });
 
         res.status(200).json(practiceSessions);
     } catch (error) {
