@@ -17,21 +17,45 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useSessionStore } from "@/stores/useSessionStore";
+import { SessionFormData } from "@/types";
 import { format } from "date-fns";
-import { CalendarIcon, Plus } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const AddSessionDialog = () => {
-    const { addPracticeSession } = useSessionStore();
+interface SessionDialogProps {
+    initialName?: string;
+    initialDate?: Date;
+    icon?: React.ReactNode;
+    triggerText: string;
+    triggerClassName?: string;
+    title?: string;
+    description?: string;
+    submitText?: string;
+    action: (session: SessionFormData) => void;
+}
 
+const DEFAULT_SESSION_NAME = "New session";
+
+const SessionDialog = ({
+    initialName,
+    initialDate,
+    icon,
+    triggerText,
+    triggerClassName,
+    title,
+    description,
+    submitText,
+    action,
+}: SessionDialogProps) => {
     const [isLoading, setIsLoading] = useState(false);
     const [sessionDialogOpen, setSessionDialogOpen] = useState(false);
 
     // Form inputs
-    const [name, setName] = useState<string>("New session");
-    const [date, setDate] = useState<Date>();
+    const [name, setName] = useState<string>(
+        initialName || DEFAULT_SESSION_NAME
+    );
+    const [date, setDate] = useState<Date | undefined>(initialDate);
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -41,21 +65,18 @@ const AddSessionDialog = () => {
                 return toast.error("Please fill in all fields");
             }
 
-            const newSession = {
+            const session = {
                 name,
                 date,
             };
 
-            addPracticeSession(newSession);
+            action(session);
 
             // reset form
             setName("");
             setDate(undefined);
             setSessionDialogOpen(false);
-
-            toast.success("New session was created");
         } catch (error: any) {
-            toast.error("Error creating session");
             console.log("Error creating session: ", error);
         } finally {
             setIsLoading(false);
@@ -65,17 +86,15 @@ const AddSessionDialog = () => {
     return (
         <Dialog open={sessionDialogOpen} onOpenChange={setSessionDialogOpen}>
             <DialogTrigger asChild>
-                <Button className="rounded-full bg-red-400 hover:bg-red-300">
-                    <Plus size={16} />
-                    New Session
+                <Button className={triggerClassName}>
+                    {icon}
+                    {triggerText}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add Practice Session</DialogTitle>
-                    <DialogDescription>
-                        Add a new practice session to your sessions list
-                    </DialogDescription>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
                 {/* Form inputs */}
                 <div className="grid gap-4 py-4">
@@ -85,7 +104,7 @@ const AddSessionDialog = () => {
                         </Label>
                         <Input
                             id="name"
-                            defaultValue="New session"
+                            defaultValue={initialName || DEFAULT_SESSION_NAME}
                             onChange={(e) => setName(e.target.value)}
                             className="col-span-3"
                         />
@@ -131,11 +150,11 @@ const AddSessionDialog = () => {
                         Cancel
                     </Button>
                     <Button onClick={handleSubmit} disabled={isLoading}>
-                        Add session
+                        {submitText}
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 };
-export default AddSessionDialog;
+export default SessionDialog;

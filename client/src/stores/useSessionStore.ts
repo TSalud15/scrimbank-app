@@ -1,12 +1,7 @@
 import { axiosInstance } from "@/lib/axios";
-import { PracticeSession } from "@/types";
+import { PracticeSession, SessionFormData } from "@/types";
 import toast from "react-hot-toast";
 import { create } from "zustand";
-
-interface SessionFormData {
-    name: string;
-    date: Date;
-}
 
 interface SessionStore {
     practiceSessions: PracticeSession[];
@@ -56,6 +51,8 @@ export const useSessionStore = create<SessionStore>((set) => ({
             set((state) => ({
                 practiceSessions: [newSession, ...state.practiceSessions],
             }));
+
+            toast.success("New session was created");
         } catch (error) {
             console.log("Error adding practice session: ", error);
             toast.error("Error adding practice session");
