@@ -9,7 +9,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
     Card,
     CardDescription,
@@ -64,6 +64,9 @@ const SessionCard = ({ session }: SessionCardProps) => {
                             <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
+                                    className={buttonVariants({
+                                        variant: "destructive",
+                                    })}
                                     onClick={() =>
                                         deletePracticeSession(session._id)
                                     }
