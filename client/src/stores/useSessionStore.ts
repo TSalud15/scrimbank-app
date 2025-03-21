@@ -3,12 +3,18 @@ import { PracticeSession } from "@/types";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
+interface SessionFormData {
+    name: string;
+    date: Date;
+}
+
 interface SessionStore {
     practiceSessions: PracticeSession[];
     isLoading: boolean;
     error: string | null;
 
     fetchPracticeSessions: () => Promise<void>;
+    addPracticeSession: (session: SessionFormData) => Promise<void>;
     deletePracticeSession: (id: string) => Promise<void>;
 }
 
@@ -26,6 +32,33 @@ export const useSessionStore = create<SessionStore>((set) => ({
         } catch (error: any) {
             console.log("Error fetching practice sessions: ", error);
             set({ error: error.response.data.message });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    addPracticeSession: async (session: SessionFormData) => {
+        set({ isLoading: true, error: null });
+        try {
+            const formData = new FormData();
+
+            formData.append("name", session.name);
+            formData.append("date", session.date.toISOString());
+
+            const res = await axiosInstance.post("/sessions", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            const newSession = res.data;
+
+            set((state) => ({
+                practiceSessions: [newSession, ...state.practiceSessions],
+            }));
+        } catch (error) {
+            console.log("Error adding practice session: ", error);
+            toast.error("Error adding practice session");
         } finally {
             set({ isLoading: false });
         }

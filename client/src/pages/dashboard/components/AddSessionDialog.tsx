@@ -16,14 +16,16 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { axiosInstance } from "@/lib/axios";
 import { cn } from "@/lib/utils";
+import { useSessionStore } from "@/stores/useSessionStore";
 import { format } from "date-fns";
 import { CalendarIcon, Plus } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 const AddSessionDialog = () => {
+    const { addPracticeSession } = useSessionStore();
+
     const [isLoading, setIsLoading] = useState(false);
     const [sessionDialogOpen, setSessionDialogOpen] = useState(false);
 
@@ -39,16 +41,12 @@ const AddSessionDialog = () => {
                 return toast.error("Please fill in all fields");
             }
 
-            const formData = new FormData();
+            const newSession = {
+                name,
+                date,
+            };
 
-            formData.append("name", name);
-            formData.append("date", date.toISOString());
-
-            await axiosInstance.post("/sessions", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            addPracticeSession(newSession);
 
             // reset form
             setName("");
