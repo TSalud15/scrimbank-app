@@ -1,7 +1,7 @@
 import { useSessionStore } from "@/stores/useSessionStore";
 import { useEffect } from "react";
 import SessionGrid from "./components/SessionGrid";
-import AddSessionDialog from "./components/SessionDialog";
+import AddSessionDialog from "./components/AddSessionDialog";
 import { Plus } from "lucide-react";
 
 const DashboardPage = () => {

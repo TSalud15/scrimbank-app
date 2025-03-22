@@ -1,7 +1,7 @@
 import SessionCard from "./SessionCard";
 import SessionGridSkeleton from "./SessionGridSkeleton";
 import { PracticeSession } from "@/types";
-import AddSessionDialog from "./SessionDialog";
+import AddSessionDialog from "./AddSessionDialog";
 
 type SessionGridProps = {
     practiceSessions: PracticeSession[];

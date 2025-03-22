@@ -65,7 +65,6 @@ const AddSessionDialog = ({
             setDate(undefined);
             setSessionDialogOpen(false);
         } catch (error: any) {
-            toast.error("Error creating session");
             console.log("Error creating session: ", error);
         } finally {
             setIsLoading(false);
@@ -82,9 +81,9 @@ const AddSessionDialog = ({
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add Practice Session</DialogTitle>
+                    <DialogTitle>Add practice session</DialogTitle>
                     <DialogDescription>
-                        Add a new practice session to your sessions list
+                        Add practice session to your sessions list
                     </DialogDescription>
                 </DialogHeader>
                 {/* Form inputs */}
