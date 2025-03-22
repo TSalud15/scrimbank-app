@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import SessionCard from "./SessionCard";
 import SessionGridSkeleton from "./SessionGridSkeleton";
 import { PracticeSession } from "@/types";
+import AddSessionDialog from "./AddSessionDialog";
 
 type SessionGridProps = {
     practiceSessions: PracticeSession[];
@@ -17,12 +17,17 @@ const SessionGrid = ({ practiceSessions, isLoading }: SessionGridProps) => {
                 <SessionCard key={session._id} session={session} />
             ))}
 
-            <Button
+            <AddSessionDialog
+                triggerClassName="flex justify-center items-center h-10 rounded-xl bg-transparent border-2 border-dashed hover:bg-secondary text-white"
+                triggerText="Create new session"
+            />
+
+            {/* <Button
                 variant="secondary"
                 className="flex justify-center items-center h-10 rounded-xl bg-transparent border-2 border-dashed hover:bg-secondary"
             >
                 Create new session
-            </Button>
+            </Button> */}
         </div>
     );
 };

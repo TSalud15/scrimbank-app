@@ -20,6 +20,7 @@ import {
 import { useSessionStore } from "@/stores/useSessionStore";
 import { PracticeSession } from "@/types";
 import { Pencil, Trash2 } from "lucide-react";
+import EditSessionDialog from "./EditSessionDialog";
 
 type SessionCardProps = {
     session: PracticeSession;
@@ -38,10 +39,17 @@ const SessionCard = ({ session }: SessionCardProps) => {
             </CardHeader>
             <CardFooter>
                 <div className="flex gap-2">
-                    <Button>
+                    <EditSessionDialog
+                        sessionId={session._id}
+                        initialName={session.name}
+                        initialDate={new Date(session.date)}
+                        icon={<Pencil />}
+                        triggerText="Edit"
+                    />
+                    {/* <Button>
                         <Pencil />
                         Edit
-                    </Button>
+                    </Button> */}
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button variant="destructive">

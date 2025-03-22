@@ -15,6 +15,10 @@ interface SessionStore {
 
     fetchPracticeSessions: () => Promise<void>;
     addPracticeSession: (session: SessionFormData) => Promise<void>;
+    updatePracticeSession: (
+        id: string,
+        session: SessionFormData
+    ) => Promise<void>;
     deletePracticeSession: (id: string) => Promise<void>;
 }
 
@@ -56,9 +60,46 @@ export const useSessionStore = create<SessionStore>((set) => ({
             set((state) => ({
                 practiceSessions: [newSession, ...state.practiceSessions],
             }));
-        } catch (error) {
-            console.log("Error adding practice session: ", error);
+
+            toast.success("New session was created");
+        } catch (error: any) {
             toast.error("Error adding practice session");
+            console.log("Error adding practice session: ", error);
+            set({ error: error.response.data.message });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    updatePracticeSession: async (id, session) => {
+        set({ isLoading: true, error: null });
+        try {
+            const formData = new FormData();
+
+            formData.append("name", session.name);
+            formData.append("date", session.date.toISOString());
+
+            const res = await axiosInstance.patch(`/sessions/${id}`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            // update session in state
+            const updatedSession = res.data;
+
+            set((state) => ({
+                practiceSessions: state.practiceSessions.map((session) =>
+                    session._id === id ? updatedSession : session
+                ),
+            }));
+
+            toast.success("Session changes were saved");
+        } catch (error: any) {
+            toast.error("Error adding practice session");
+            console.log("Error updating practice session: ", error);
+            console.log(typeof session.date);
+            set({ error: error.response.data.message });
         } finally {
             set({ isLoading: false });
         }

@@ -23,27 +23,37 @@ import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const DEFAULT_SESSION_NAME = "New session";
-
-interface AddSessionDialogProps {
+interface EditSessionDialogProps {
+    sessionId: string;
+    initialName: string;
+    initialDate: Date;
     triggerClassName?: string;
     icon?: React.ReactNode;
     triggerText?: string;
 }
 
-const AddSessionDialog = ({
+const EditSessionDialog = ({
+    sessionId,
+    initialName,
+    initialDate,
     triggerClassName,
     icon,
     triggerText,
-}: AddSessionDialogProps) => {
-    const { addPracticeSession } = useSessionStore();
+}: EditSessionDialogProps) => {
+    const { updatePracticeSession } = useSessionStore();
 
     const [isLoading, setIsLoading] = useState(false);
     const [sessionDialogOpen, setSessionDialogOpen] = useState(false);
 
     // Form inputs
-    const [name, setName] = useState<string>(DEFAULT_SESSION_NAME);
-    const [date, setDate] = useState<Date>();
+    const [name, setName] = useState<string>(initialName);
+    const [date, setDate] = useState<Date | undefined>(initialDate);
+
+    const handleCancel = () => {
+        setName(initialName);
+        setDate(initialDate);
+        setSessionDialogOpen(false);
+    };
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -53,20 +63,17 @@ const AddSessionDialog = ({
                 return toast.error("Please fill in all fields");
             }
 
-            const newSession = {
+            const updatedSession = {
                 name,
                 date,
             };
 
-            addPracticeSession(newSession);
+            updatePracticeSession(sessionId, updatedSession);
 
-            // reset form
-            setName("");
-            setDate(undefined);
             setSessionDialogOpen(false);
         } catch (error: any) {
-            toast.error("Error creating session");
-            console.log("Error creating session: ", error);
+            toast.error("Error saving session changes");
+            console.log("Error updating session: ", error);
         } finally {
             setIsLoading(false);
         }
@@ -82,9 +89,9 @@ const AddSessionDialog = ({
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add Practice Session</DialogTitle>
+                    <DialogTitle>Edit Practice Session</DialogTitle>
                     <DialogDescription>
-                        Add a new practice session to your sessions list
+                        Make changes to your practice session
                     </DialogDescription>
                 </DialogHeader>
                 {/* Form inputs */}
@@ -95,7 +102,7 @@ const AddSessionDialog = ({
                         </Label>
                         <Input
                             id="name"
-                            defaultValue={DEFAULT_SESSION_NAME}
+                            defaultValue={initialName}
                             onChange={(e) => setName(e.target.value)}
                             className="col-span-3"
                         />
@@ -134,21 +141,25 @@ const AddSessionDialog = ({
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button
-                        variant="outline"
-                        onClick={() => setSessionDialogOpen(false)}
-                    >
+                    <Button variant="outline" onClick={handleCancel}>
                         Cancel
                     </Button>
                     <Button
                         onClick={handleSubmit}
-                        disabled={isLoading || !date || !name}
+                        disabled={
+                            isLoading ||
+                            !date ||
+                            !name ||
+                            (name === initialName &&
+                                date?.toLocaleDateString() ===
+                                    initialDate.toLocaleDateString())
+                        }
                     >
-                        Add session
+                        Save changes
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 };
-export default AddSessionDialog;
+export default EditSessionDialog;
