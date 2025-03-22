@@ -1,7 +1,7 @@
 import { useSessionStore } from "@/stores/useSessionStore";
 import { useEffect } from "react";
 import SessionGrid from "./components/SessionGrid";
-import AddSessionDialog from "./components/AddSessionDialog";
+import AddSessionDialog from "./components/SessionDialog";
 import { Plus } from "lucide-react";
 
 const DashboardPage = () => {
@@ -18,8 +18,8 @@ const DashboardPage = () => {
                 <h1 className="font-semibold text-2xl">My Practice Sessions</h1>
                 <AddSessionDialog
                     triggerClassName="rounded-full bg-red-400 hover:bg-red-300"
-                    icon={<Plus size={16} />}
                     triggerText="New session"
+                    icon={<Plus size={16} />}
                 />
             </div>
             <SessionGrid

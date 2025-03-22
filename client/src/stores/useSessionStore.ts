@@ -1,12 +1,7 @@
 import { axiosInstance } from "@/lib/axios";
-import { PracticeSession } from "@/types";
+import { PracticeSession, SessionFormData } from "@/types";
 import toast from "react-hot-toast";
 import { create } from "zustand";
-
-interface SessionFormData {
-    name: string;
-    date: Date;
-}
 
 interface SessionStore {
     practiceSessions: PracticeSession[];
