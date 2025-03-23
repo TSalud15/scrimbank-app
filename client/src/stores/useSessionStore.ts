@@ -1,14 +1,22 @@
 import { axiosInstance } from "@/lib/axios";
-import { PracticeSession, SessionFormData } from "@/types";
+import { PracticeSession } from "@/types";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
+interface SessionFormData {
+    name: string;
+    date: Date;
+}
+
 interface SessionStore {
     practiceSessions: PracticeSession[];
+    currentSession: PracticeSession | null;
+
     isLoading: boolean;
     error: string | null;
 
     fetchPracticeSessions: () => Promise<void>;
+    fetchPracticeSessionById: (id: string) => Promise<void>;
     addPracticeSession: (session: SessionFormData) => Promise<void>;
     updatePracticeSession: (
         id: string,
@@ -18,7 +26,9 @@ interface SessionStore {
 }
 
 export const useSessionStore = create<SessionStore>((set) => ({
+    // initial state
     practiceSessions: [],
+    currentSession: null,
     isLoading: false,
     error: null,
 
@@ -30,6 +40,20 @@ export const useSessionStore = create<SessionStore>((set) => ({
             set({ practiceSessions: res.data });
         } catch (error: any) {
             console.log("Error fetching practice sessions: ", error);
+            set({ error: error.response.data.message });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    fetchPracticeSessionById: async (id) => {
+        set({ isLoading: true, error: null });
+
+        try {
+            const res = await axiosInstance.get(`/sessions/${id}`);
+            set({ currentSession: res.data });
+        } catch (error: any) {
+            console.log("Error fetching practice session: ", error);
             set({ error: error.response.data.message });
         } finally {
             set({ isLoading: false });

@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 
 import { Toaster } from "react-hot-toast";
+import PracticeSessionPage from "./pages/practice-session/PracticeSessionPage";
 
 function App() {
     return (
@@ -12,6 +13,10 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route element={<MainLayout />}>
                     <Route path="/dashboard" element={<DashboardPage />} />
+                    <Route
+                        path="session/:sessionId"
+                        element={<PracticeSessionPage />}
+                    />
                 </Route>
             </Routes>
             <Toaster />

@@ -3,8 +3,3 @@ export interface PracticeSession {
     name: string;
     date: Date;
 }
-
-export interface SessionFormData {
-    name: string;
-    date: Date;
-}

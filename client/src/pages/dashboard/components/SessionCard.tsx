@@ -21,6 +21,7 @@ import { useSessionStore } from "@/stores/useSessionStore";
 import { PracticeSession } from "@/types";
 import { Pencil, Trash2 } from "lucide-react";
 import EditSessionDialog from "./EditSessionDialog";
+import { Link } from "react-router-dom";
 
 type SessionCardProps = {
     session: PracticeSession;
@@ -31,12 +32,14 @@ const SessionCard = ({ session }: SessionCardProps) => {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle className="text-xl">{session.name}</CardTitle>
-                <CardDescription>
-                    {new Date(session.date).toLocaleDateString()}
-                </CardDescription>
-            </CardHeader>
+            <Link to={`/session/${session._id}`}>
+                <CardHeader>
+                    <CardTitle className="text-xl">{session.name}</CardTitle>
+                    <CardDescription>
+                        {new Date(session.date).toLocaleDateString()}
+                    </CardDescription>
+                </CardHeader>
+            </Link>
             <CardFooter>
                 <div className="flex gap-2">
                     <EditSessionDialog

@@ -13,9 +13,9 @@ const DashboardPage = () => {
     }, [fetchPracticeSessions]);
 
     return (
-        <main className="flex flex-1 flex-col overflow-auto p-6 space-y-5">
+        <main className="h-full flex flex-col overflow-auto p-6 space-y-5">
             <div className="flex justify-between items-center">
-                <h1 className="font-semibold text-2xl">My Practice Sessions</h1>
+                <h1 className="font-semibold text-2xl">Practice Sessions</h1>
                 <AddSessionDialog
                     triggerClassName="rounded-full bg-red-400 hover:bg-red-300"
                     triggerText="New session"
