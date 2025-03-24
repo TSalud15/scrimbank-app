@@ -15,6 +15,11 @@ const sessionSchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
+        scrims: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: "Scrim",
+            default: [],
+        },
     },
     { timestamps: true }
 );

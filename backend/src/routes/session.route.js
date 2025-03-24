@@ -2,7 +2,7 @@ import express from "express";
 
 import {
     createPracticeSession,
-    getPracticeSession,
+    getPracticeSessionById,
     deletePracticeSession,
     getPracticeSessions,
     updatePracticeSession,
@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post("/", createPracticeSession);
 router.post("/:sessionId/scrims", createScrim);
-router.get("/:sessionId", getPracticeSession);
+router.get("/:sessionId", getPracticeSessionById);
 router.get("/", getPracticeSessions);
 router.patch("/:sessionId", updatePracticeSession);
 router.delete("/:sessionId", deletePracticeSession);

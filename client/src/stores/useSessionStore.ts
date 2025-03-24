@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/axios";
-import { PracticeSession } from "@/types";
+import { PracticeSession, Scrim } from "@/types";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 
@@ -11,6 +11,7 @@ interface SessionFormData {
 interface SessionStore {
     practiceSessions: PracticeSession[];
     currentSession: PracticeSession | null;
+    scrims: Scrim[];
 
     isLoading: boolean;
     error: string | null;
@@ -29,6 +30,8 @@ export const useSessionStore = create<SessionStore>((set) => ({
     // initial state
     practiceSessions: [],
     currentSession: null,
+    scrims: [],
+
     isLoading: false,
     error: null,
 

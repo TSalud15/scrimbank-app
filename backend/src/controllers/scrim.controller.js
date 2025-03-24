@@ -49,7 +49,7 @@ export const createScrim = async (req, res) => {
 
         // create and save scrim to db
         const newScrim = new Scrim({
-            session: sessionId,
+            sessionId,
             name,
             map,
             goals,
@@ -60,16 +60,10 @@ export const createScrim = async (req, res) => {
 
         await newScrim.save();
 
-        // save scrim under practice session
-        const practiceSession = await Session.findById(sessionId);
-
-        if (!practiceSession) {
-            return res.status(404).json({ message: "Session not found" });
-        }
-
-        practiceSession.scrims.push(newScrim._id);
-
-        await practiceSession.save();
+        // push scrim id to practice session scrims array in db
+        await Session.findByIdAndUpdate(sessionId, {
+            $push: { scrims: newScrim._id },
+        });
 
         res.status(200).json(newScrim);
     } catch (error) {
@@ -80,7 +74,7 @@ export const createScrim = async (req, res) => {
     }
 };
 
-export const getScrim = async (req, res) => {
+export const getScrimById = async (req, res) => {
     try {
         // check if user is authenticated
         const clerkId = req.auth.userId;
@@ -205,6 +199,11 @@ export const deleteScrim = async (req, res) => {
             return res.status(403).json({
                 message: "Only the owner can modify the practice session",
             });
+
+        // remove scrim from practice session
+        await Session.findByIdAndUpdate(scrim.sessionId, {
+            $pull: { scrims: scrim._id },
+        });
 
         // delete scrim in db if user owns it
         await Scrim.findByIdAndDelete(scrimId);

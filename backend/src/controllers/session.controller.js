@@ -1,3 +1,4 @@
+import Scrim from "../models/scrim.model.js";
 import Session from "../models/session.model.js";
 import User from "../models/user.model.js";
 
@@ -43,7 +44,7 @@ export const createPracticeSession = async (req, res) => {
     }
 };
 
-export const getPracticeSession = async (req, res) => {
+export const getPracticeSessionById = async (req, res) => {
     try {
         // check if user is authenticated
         const clerkId = req.auth.userId;
@@ -58,8 +59,10 @@ export const getPracticeSession = async (req, res) => {
             return res.status(400).json({ message: "Session ID not provided" });
         }
 
-        // get practice session from db
-        const practiceSession = await Session.findById(sessionId);
+        // get practice session from db and populate scrims array
+        const practiceSession = await Session.findById(sessionId).populate(
+            "scrims"
+        );
 
         if (!practiceSession) {
             return res.status(404).json({ message: "Session not found" });
@@ -159,13 +162,18 @@ export const deletePracticeSession = async (req, res) => {
 
         const session = await Session.findById(sessionId);
 
+        if (!session) {
+            return res.status(404).json({ message: "Session not found" });
+        }
+
+        // check that session belongs to user
         if (!session.userId.equals(user._id))
             return res
                 .status(403)
                 .json({ message: "You do not own this practice session" });
 
-        // delete practice session in db if user owns it
-        await Session.findByIdAndDelete(sessionId);
+        await Scrim.deleteMany({ sessionId }); // delete scrims under practice session
+        await Session.findByIdAndDelete(sessionId); // delete practice session in db if user owns it
 
         return res.status(200).json({
             message: "Practice session deleted successfully",

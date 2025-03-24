@@ -1,14 +1,13 @@
 import express from "express";
 import {
-    createScrim,
     deleteScrim,
-    getScrim,
+    getScrimById,
     updateScrim,
 } from "../controllers/scrim.controller.js";
 
 const router = express.Router();
 
-router.get("/:scrimId", getScrim);
+router.get("/:scrimId", getScrimById);
 router.patch("/:scrimId", updateScrim);
 router.delete("/:scrimId", deleteScrim);
 

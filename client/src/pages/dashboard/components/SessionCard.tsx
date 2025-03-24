@@ -49,10 +49,6 @@ const SessionCard = ({ session }: SessionCardProps) => {
                         icon={<Pencil />}
                         triggerText="Edit"
                     />
-                    {/* <Button>
-                        <Pencil />
-                        Edit
-                    </Button> */}
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <Button variant="destructive">

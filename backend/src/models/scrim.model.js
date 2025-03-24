@@ -1,5 +1,45 @@
 import mongoose from "mongoose";
 
+const MAP_POOL = [
+    "ascent",
+    "icebox",
+    "haven",
+    "fracture",
+    "lotus",
+    "pearl",
+    "split",
+];
+
+const AGENT_LIST = [
+    "brimstone",
+    "viper",
+    "omen",
+    "cypher",
+    "sova",
+    "sage",
+    "phoenix",
+    "jett",
+    "raze",
+    "breach",
+    "reyna",
+    "killjoy",
+    "skye",
+    "yoru",
+    "astra",
+    "kay/o",
+    "chamber",
+    "neon",
+    "fade",
+    "harbor",
+    "gekko",
+    "deadlock",
+    "iso",
+    "clove",
+    "vyse",
+    "tejo",
+    "waylay",
+];
+
 const scrimSchema = new mongoose.Schema(
     {
         sessionId: {
@@ -13,15 +53,7 @@ const scrimSchema = new mongoose.Schema(
         },
         map: {
             type: String,
-            enum: [
-                "Abyss",
-                "Bind",
-                "Haven",
-                "Fracture",
-                "Lotus",
-                "Pearl",
-                "Split",
-            ], // potentially add rest of maps
+            enum: MAP_POOL, // potentially add rest of maps
         },
         goals: {
             type: [String],
@@ -40,6 +72,7 @@ const scrimSchema = new mongoose.Schema(
                 agent: {
                     type: String,
                     required: true,
+                    enum: AGENT_LIST,
                 },
             },
         ],
@@ -52,6 +85,7 @@ const scrimSchema = new mongoose.Schema(
                 agent: {
                     type: String,
                     required: true,
+                    enum: AGENT_LIST,
                 },
             },
         ],
