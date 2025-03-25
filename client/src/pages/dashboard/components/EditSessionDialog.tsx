@@ -1,7 +1,8 @@
+import DatePicker from "@/components/DatePicker";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
@@ -11,15 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { useSessionStore } from "@/stores/useSessionStore";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -52,7 +45,6 @@ const EditSessionDialog = ({
     const handleCancel = () => {
         setName(initialName);
         setDate(initialDate);
-        setSessionDialogOpen(false);
     };
 
     const handleSubmit = async () => {
@@ -112,38 +104,15 @@ const EditSessionDialog = ({
                             Date
                         </Label>
                         {/* Date picker */}
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                        "col-span-3 justify-start text-left font-normal",
-                                        !date && "text-muted-foreground"
-                                    )}
-                                >
-                                    <CalendarIcon />
-                                    {date ? (
-                                        format(date, "PPP")
-                                    ) : (
-                                        <span>Pick a date</span>
-                                    )}
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0">
-                                <Calendar
-                                    mode="single"
-                                    selected={date}
-                                    onSelect={setDate}
-                                    initialFocus
-                                />
-                            </PopoverContent>
-                        </Popover>
+                        <DatePicker date={date} setDate={setDate} />
                     </div>
                 </div>
-                <DialogFooter>
-                    <Button variant="outline" onClick={handleCancel}>
-                        Cancel
-                    </Button>
+                <DialogFooter className="space-y-reverse space-y-2">
+                    <DialogClose asChild>
+                        <Button variant="outline" onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    </DialogClose>
                     <Button
                         onClick={handleSubmit}
                         disabled={

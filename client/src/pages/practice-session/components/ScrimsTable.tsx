@@ -8,43 +8,49 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { PracticeSession } from "@/types";
 import { ExternalLink, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
 
-const scrims = [
-    {
-        id: 1,
-        name: "Scrim vs. Sentinels",
-        map: "Ascent",
-        date: new Date().toLocaleDateString(),
-    },
-    {
-        id: 2,
-        name: "Testing Icebox comp",
-        map: "Icebox",
-        date: new Date().toLocaleDateString(),
-    },
-    {
-        id: 3,
-        name: "Lotus protocols",
-        map: "Lotus",
-        date: new Date().toLocaleDateString(),
-    },
-    {
-        id: 4,
-        name: "Scrim vs. T1",
-        map: "Haven",
-        date: new Date().toLocaleDateString(),
-    },
-    {
-        id: 5,
-        name: "New split comp",
-        map: "Split",
-        date: new Date().toLocaleDateString(),
-    },
-];
+// const scrims = [
+//     {
+//         id: 1,
+//         name: "Scrim vs. Sentinels",
+//         map: "Ascent",
+//         date: new Date().toLocaleDateString(),
+//     },
+//     {
+//         id: 2,
+//         name: "Testing Icebox comp",
+//         map: "Icebox",
+//         date: new Date().toLocaleDateString(),
+//     },
+//     {
+//         id: 3,
+//         name: "Lotus protocols",
+//         map: "Lotus",
+//         date: new Date().toLocaleDateString(),
+//     },
+//     {
+//         id: 4,
+//         name: "Scrim vs. T1",
+//         map: "Haven",
+//         date: new Date().toLocaleDateString(),
+//     },
+//     {
+//         id: 5,
+//         name: "New split comp",
+//         map: "Split",
+//         date: new Date().toLocaleDateString(),
+//     },
+// ];
 
-const ScrimsTable = () => {
+interface ScrimsTableProps {
+    currentSession: PracticeSession | null;
+}
+
+const ScrimsTable = ({ currentSession }: ScrimsTableProps) => {
     return (
         <Table>
             <TableCaption>A list of your scrims.</TableCaption>
@@ -58,18 +64,25 @@ const ScrimsTable = () => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {scrims.map((scrim) => (
-                    <TableRow key={scrim.id}>
+                {currentSession?.scrims.map((scrim) => (
+                    <TableRow key={scrim._id}>
                         <TableCell className="font-medium">
                             {scrim.name}
                         </TableCell>
-                        <TableCell>{scrim.map}</TableCell>
+                        <TableCell>
+                            {scrim.map.charAt(0).toUpperCase() +
+                                scrim.map.slice(1)}
+                        </TableCell>
 
-                        <TableCell>{scrim.date}</TableCell>
+                        <TableCell>
+                            {new Date(scrim.date).toLocaleDateString()}
+                        </TableCell>
                         <TableCell className="text-right">
                             <div className="flex gap-2 justify-center">
-                                <Button variant={"ghost"} size={"sm"}>
-                                    <ExternalLink className="size-4" />
+                                <Button variant={"ghost"} size={"sm"} asChild>
+                                    <Link to={`/scrim/${scrim._id}`}>
+                                        <ExternalLink className="size-4" />
+                                    </Link>
                                 </Button>
                                 <Button
                                     variant={"ghost"}

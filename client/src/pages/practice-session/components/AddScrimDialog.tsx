@@ -1,5 +1,6 @@
 import DatePicker from "@/components/DatePicker";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
     Dialog,
     DialogClose,
@@ -12,11 +13,20 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { useScrimStore } from "@/stores/useScrimStore";
 import { useSessionStore } from "@/stores/useSessionStore";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-const DEFAULT_SESSION_NAME = "New session";
+const DEFAULT_SCRIM_NAME = "New scrim";
 
 interface AddSessionDialogProps {
     triggerClassName?: string;
@@ -24,19 +34,21 @@ interface AddSessionDialogProps {
     triggerText?: string;
 }
 
-const AddSessionDialog = ({
+const AddScrimDialog = ({
     triggerClassName,
     icon,
     triggerText,
 }: AddSessionDialogProps) => {
-    const { addPracticeSession } = useSessionStore();
+    const { addScrim } = useScrimStore();
 
     const [isLoading, setIsLoading] = useState(false);
     const [sessionDialogOpen, setSessionDialogOpen] = useState(false);
 
     // Form inputs
-    const [name, setName] = useState<string>(DEFAULT_SESSION_NAME);
+    const [name, setName] = useState<string>(DEFAULT_SCRIM_NAME);
+    const [map, setMap] = useState<string>("");
     const [date, setDate] = useState<Date>();
+    const [notes, setNotes] = useState<string[]>([]);
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -46,12 +58,14 @@ const AddSessionDialog = ({
                 return toast.error("Please fill in all fields");
             }
 
-            const newSession = {
+            const newScrim = {
                 name,
                 date,
+                map,
+                notes,
             };
 
-            addPracticeSession(newSession);
+            // addScrim(newScrim);
 
             // reset form
             setName("");
@@ -74,9 +88,9 @@ const AddSessionDialog = ({
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add practice session</DialogTitle>
+                    <DialogTitle>Add scrim</DialogTitle>
                     <DialogDescription>
-                        Add practice session to your sessions list
+                        Add scrim to this practice session
                     </DialogDescription>
                 </DialogHeader>
                 {/* Form inputs */}
@@ -87,8 +101,18 @@ const AddSessionDialog = ({
                         </Label>
                         <Input
                             id="name"
-                            defaultValue={DEFAULT_SESSION_NAME}
+                            defaultValue={DEFAULT_SCRIM_NAME}
                             onChange={(e) => setName(e.target.value)}
+                            className="col-span-3"
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="map" className="text-right">
+                            Map
+                        </Label>
+                        <Input
+                            id="map"
+                            onChange={(e) => setMap(e.target.value)}
                             className="col-span-3"
                         />
                     </div>
@@ -106,13 +130,13 @@ const AddSessionDialog = ({
                     </DialogClose>
                     <Button
                         onClick={handleSubmit}
-                        disabled={isLoading || !date || !name}
+                        disabled={isLoading || !date || !name || !map}
                     >
-                        Add session
+                        Add scrim
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 };
-export default AddSessionDialog;
+export default AddScrimDialog;

@@ -2,6 +2,7 @@ export interface PracticeSession {
     _id: string;
     name: string;
     date: Date;
+    scrims: Scrim[];
 }
 
 export interface Scrim {
@@ -9,8 +10,8 @@ export interface Scrim {
     sessionId: string;
     name: string;
     map: string;
-    goals: string[];
-    notes: string;
+    date: Date;
+    notes: string[];
     yourComp: [
         {
             player: string;

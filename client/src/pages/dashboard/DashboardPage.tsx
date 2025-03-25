@@ -18,7 +18,7 @@ const DashboardPage = () => {
                 <h1 className="font-semibold text-2xl">Practice Sessions</h1>
                 <AddSessionDialog
                     triggerClassName="rounded-full bg-red-400 hover:bg-red-300"
-                    triggerText="New session"
+                    triggerText="New Session"
                     icon={<Plus size={16} />}
                 />
             </div>

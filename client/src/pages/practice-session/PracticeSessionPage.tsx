@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { useSessionStore } from "@/stores/useSessionStore";
 import { Plus } from "lucide-react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ScrimsTable from "./components/ScrimsTable";
+import AddScrimDialog from "./components/AddScrimDialog";
 
 const PracticeSessionPage = () => {
     const { sessionId } = useParams();
@@ -23,12 +23,13 @@ const PracticeSessionPage = () => {
                 <h1 className="font-semibold text-2xl">
                     {currentSession?.name}
                 </h1>
-                <Button className="rounded-full bg-red-400 hover:bg-red-300">
-                    <Plus size={16} />
-                    New scrim
-                </Button>
+                <AddScrimDialog
+                    triggerText="New Scrim"
+                    icon={<Plus size={16} />}
+                    triggerClassName="rounded-full bg-red-400 hover:bg-red-300"
+                />
             </div>
-            <ScrimsTable />
+            <ScrimsTable currentSession={currentSession} />
         </main>
     );
 };
