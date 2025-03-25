@@ -8,6 +8,10 @@ const MAP_POOL = [
     "lotus",
     "pearl",
     "split",
+    "bind",
+    "breeze",
+    "sunset",
+    "abyss",
 ];
 
 const AGENT_LIST = [
@@ -54,14 +58,14 @@ const scrimSchema = new mongoose.Schema(
         map: {
             type: String,
             enum: MAP_POOL, // potentially add rest of maps
+            required: true,
         },
-        goals: {
-            type: [String],
-            default: [],
+        date: {
+            type: Date,
+            required: true,
         },
         notes: {
             type: String,
-            default: "",
         },
         yourComp: [
             {
@@ -103,11 +107,9 @@ const scrimSchema = new mongoose.Schema(
         },
         screenshots: {
             type: [String],
-            default: [],
         },
         videos: {
             type: [String],
-            default: [],
         },
     },
     { timestamps: true }

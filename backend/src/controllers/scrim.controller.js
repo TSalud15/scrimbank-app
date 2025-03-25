@@ -41,21 +41,21 @@ export const createScrim = async (req, res) => {
             });
         }
 
-        const { name, map, goals, notes } = req.body;
+        const { name, map, date, notes } = req.body;
 
         // check that all required fields are provided
-        if (!name)
-            return res.status(400).json({ message: "Scrim name is required" });
+        if (!name || !map || !date)
+            return res
+                .status(400)
+                .json({ message: "Please provide all fields" });
 
         // create and save scrim to db
         const newScrim = new Scrim({
             sessionId,
             name,
             map,
-            goals,
+            date,
             notes,
-            screenshots: [],
-            videos: [],
         });
 
         await newScrim.save();
@@ -120,7 +120,7 @@ export const updateScrim = async (req, res) => {
         const {
             name,
             map,
-            goals,
+            date,
             notes,
             yourComp,
             opponentComp,
@@ -154,7 +154,7 @@ export const updateScrim = async (req, res) => {
         // update scrim data
         scrim.name = name || scrim.name;
         scrim.map = map || scrim.map;
-        scrim.goals = goals || scrim.goals;
+        scrim.date = date || scrim.date;
         scrim.notes = notes || scrim.notes;
         scrim.yourComp = yourComp || scrim.yourComp;
         scrim.opponentComp = opponentComp || scrim.opponentComp;

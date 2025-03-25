@@ -59,10 +59,11 @@ export const getPracticeSessionById = async (req, res) => {
             return res.status(400).json({ message: "Session ID not provided" });
         }
 
-        // get practice session from db and populate scrims array
-        const practiceSession = await Session.findById(sessionId).populate(
-            "scrims"
-        );
+        // get practice session from db and populate scrims array in descending order
+        const practiceSession = await Session.findById(sessionId).populate({
+            path: "scrims",
+            options: { sort: { createdAt: -1 } },
+        });
 
         if (!practiceSession) {
             return res.status(404).json({ message: "Session not found" });
