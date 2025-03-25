@@ -8,9 +8,17 @@ interface SessionFormData {
     date: Date;
 }
 
+interface ScrimFormData {
+    name: string;
+    map: string;
+    date: Date;
+    notes?: string;
+}
+
 interface SessionStore {
     practiceSessions: PracticeSession[];
     currentSession: PracticeSession | null;
+
     scrims: Scrim[];
 
     isLoading: boolean;
@@ -24,12 +32,15 @@ interface SessionStore {
         session: SessionFormData
     ) => Promise<void>;
     deletePracticeSession: (id: string) => Promise<void>;
+
+    addScrim: (sessionId: string | null, scrim: ScrimFormData) => Promise<void>;
 }
 
 export const useSessionStore = create<SessionStore>((set) => ({
     // initial state
     practiceSessions: [],
     currentSession: null,
+
     scrims: [],
 
     isLoading: false,
@@ -54,7 +65,7 @@ export const useSessionStore = create<SessionStore>((set) => ({
 
         try {
             const res = await axiosInstance.get(`/sessions/${id}`);
-            set({ currentSession: res.data });
+            set({ currentSession: res.data, scrims: res.data.scrims });
         } catch (error: any) {
             console.log("Error fetching practice session: ", error);
             set({ error: error.response.data.message });
@@ -142,6 +153,47 @@ export const useSessionStore = create<SessionStore>((set) => ({
         } catch (error: any) {
             console.log("Error deleting practice session: ", error);
             toast.error("Error deleting practice session");
+            set({ error: error.response.data.message });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    addScrim: async (sessionId, scrim) => {
+        set({ isLoading: true, error: null });
+
+        const formData = new FormData();
+
+        formData.append("name", scrim.name);
+        formData.append("date", scrim.date.toISOString());
+        formData.append("map", scrim.map);
+        if (scrim.notes) formData.append("notes", scrim.notes);
+
+        try {
+            const res = await axiosInstance.post(
+                `/sessions/${sessionId}/scrims`,
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            // update scrim in state
+            set((state) => ({
+                practiceSessions: state.practiceSessions.map((session) =>
+                    session._id === sessionId
+                        ? { ...session, scrims: [res.data, ...session.scrims] }
+                        : session
+                ),
+                scrims: [res.data, ...state.scrims],
+            }));
+
+            toast.success("Scrim added successfully");
+        } catch (error: any) {
+            console.log("Error adding scrim: ", error);
+            toast.error("Error adding scrim");
             set({ error: error.response.data.message });
         } finally {
             set({ isLoading: false });

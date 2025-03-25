@@ -1,6 +1,6 @@
 import DatePicker from "@/components/DatePicker";
+import MapSelector from "@/components/MapSelector";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
     Dialog,
     DialogClose,
@@ -13,33 +13,27 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { useScrimStore } from "@/stores/useScrimStore";
+import { Textarea } from "@/components/ui/textarea";
 import { useSessionStore } from "@/stores/useSessionStore";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
 const DEFAULT_SCRIM_NAME = "New scrim";
 
 interface AddSessionDialogProps {
+    sessionId: string;
     triggerClassName?: string;
     icon?: React.ReactNode;
     triggerText?: string;
 }
 
 const AddScrimDialog = ({
+    sessionId,
     triggerClassName,
     icon,
     triggerText,
 }: AddSessionDialogProps) => {
-    const { addScrim } = useScrimStore();
+    const { addScrim } = useSessionStore();
 
     const [isLoading, setIsLoading] = useState(false);
     const [sessionDialogOpen, setSessionDialogOpen] = useState(false);
@@ -48,7 +42,7 @@ const AddScrimDialog = ({
     const [name, setName] = useState<string>(DEFAULT_SCRIM_NAME);
     const [map, setMap] = useState<string>("");
     const [date, setDate] = useState<Date>();
-    const [notes, setNotes] = useState<string[]>([]);
+    const [notes, setNotes] = useState<string>("");
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -65,7 +59,7 @@ const AddScrimDialog = ({
                 notes,
             };
 
-            // addScrim(newScrim);
+            addScrim(sessionId, newScrim);
 
             // reset form
             setName("");
@@ -110,11 +104,7 @@ const AddScrimDialog = ({
                         <Label htmlFor="map" className="text-right">
                             Map
                         </Label>
-                        <Input
-                            id="map"
-                            onChange={(e) => setMap(e.target.value)}
-                            className="col-span-3"
-                        />
+                        <MapSelector setMap={setMap} />
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="date" className="text-right">
@@ -122,6 +112,16 @@ const AddScrimDialog = ({
                         </Label>
                         {/* Date picker */}
                         <DatePicker date={date} setDate={setDate} />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="notes" className="text-right">
+                            Notes
+                        </Label>
+                        <Textarea
+                            id="notes"
+                            onChange={(e) => setNotes(e.target.value)}
+                            className="col-span-3"
+                        />
                     </div>
                 </div>
                 <DialogFooter className="space-y-reverse space-y-2">

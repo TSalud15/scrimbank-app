@@ -8,7 +8,7 @@ import AddScrimDialog from "./components/AddScrimDialog";
 const PracticeSessionPage = () => {
     const { sessionId } = useParams();
 
-    const { currentSession, fetchPracticeSessionById, isLoading } =
+    const { currentSession, scrims, fetchPracticeSessionById, isLoading } =
         useSessionStore();
 
     useEffect(() => {
@@ -24,12 +24,13 @@ const PracticeSessionPage = () => {
                     {currentSession?.name}
                 </h1>
                 <AddScrimDialog
+                    sessionId={sessionId || ""}
                     triggerText="New Scrim"
                     icon={<Plus size={16} />}
                     triggerClassName="rounded-full bg-red-400 hover:bg-red-300"
                 />
             </div>
-            <ScrimsTable currentSession={currentSession} />
+            <ScrimsTable scrims={scrims} />
         </main>
     );
 };

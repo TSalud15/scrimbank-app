@@ -3,6 +3,8 @@ export interface PracticeSession {
     name: string;
     date: Date;
     scrims: Scrim[];
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Scrim {
@@ -11,7 +13,7 @@ export interface Scrim {
     name: string;
     map: string;
     date: Date;
-    notes: string[];
+    notes: string;
     yourComp: [
         {
             player: string;
@@ -28,4 +30,6 @@ export interface Scrim {
     opponentScore: number;
     screenshots: string[];
     videos: string[];
+    createdAt: string;
+    updatedAt: string;
 }

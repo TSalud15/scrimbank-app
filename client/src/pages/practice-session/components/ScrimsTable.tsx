@@ -8,10 +8,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { PracticeSession } from "@/types";
+import { Scrim } from "@/types";
 import { ExternalLink, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-// import { Link } from "react-router-dom";
 
 // const scrims = [
 //     {
@@ -47,10 +46,10 @@ import { Link } from "react-router-dom";
 // ];
 
 interface ScrimsTableProps {
-    currentSession: PracticeSession | null;
+    scrims: Scrim[];
 }
 
-const ScrimsTable = ({ currentSession }: ScrimsTableProps) => {
+const ScrimsTable = ({ scrims }: ScrimsTableProps) => {
     return (
         <Table>
             <TableCaption>A list of your scrims.</TableCaption>
@@ -64,7 +63,7 @@ const ScrimsTable = ({ currentSession }: ScrimsTableProps) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {currentSession?.scrims.map((scrim) => (
+                {scrims.map((scrim) => (
                     <TableRow key={scrim._id}>
                         <TableCell className="font-medium">
                             {scrim.name}

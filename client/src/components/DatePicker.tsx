@@ -14,7 +14,7 @@ interface DatePickerProps {
 const DatePicker = ({ date, setDate }: DatePickerProps) => {
     return (
         <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger id="date" asChild>
                 <Button
                     variant={"outline"}
                     className={cn(
