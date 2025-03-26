@@ -8,48 +8,19 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { useSessionStore } from "@/stores/useSessionStore";
 import { Scrim } from "@/types";
-import { ExternalLink, Trash2 } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
-
-// const scrims = [
-//     {
-//         id: 1,
-//         name: "Scrim vs. Sentinels",
-//         map: "Ascent",
-//         date: new Date().toLocaleDateString(),
-//     },
-//     {
-//         id: 2,
-//         name: "Testing Icebox comp",
-//         map: "Icebox",
-//         date: new Date().toLocaleDateString(),
-//     },
-//     {
-//         id: 3,
-//         name: "Lotus protocols",
-//         map: "Lotus",
-//         date: new Date().toLocaleDateString(),
-//     },
-//     {
-//         id: 4,
-//         name: "Scrim vs. T1",
-//         map: "Haven",
-//         date: new Date().toLocaleDateString(),
-//     },
-//     {
-//         id: 5,
-//         name: "New split comp",
-//         map: "Split",
-//         date: new Date().toLocaleDateString(),
-//     },
-// ];
+import DeleteScrimDialog from "./DeleteScrimDialog";
 
 interface ScrimsTableProps {
     scrims: Scrim[];
 }
 
 const ScrimsTable = ({ scrims }: ScrimsTableProps) => {
+    const { deleteScrim } = useSessionStore();
+
     return (
         <Table>
             <TableCaption>A list of your scrims.</TableCaption>
@@ -83,13 +54,10 @@ const ScrimsTable = ({ scrims }: ScrimsTableProps) => {
                                         <ExternalLink className="size-4" />
                                     </Link>
                                 </Button>
-                                <Button
-                                    variant={"ghost"}
-                                    size={"sm"}
-                                    className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                                >
-                                    <Trash2 className="size-4" />
-                                </Button>
+                                <DeleteScrimDialog
+                                    deleteScrim={deleteScrim}
+                                    scrimId={scrim._id}
+                                />
                             </div>
                         </TableCell>
                     </TableRow>

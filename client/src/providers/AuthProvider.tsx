@@ -19,8 +19,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             try {
                 const token = await getToken();
                 updateApiToken(token);
-                // console.log("token: ", token);
+                console.log("updated token: ", token);
             } catch (error: any) {
+                updateApiToken(null);
                 console.log("Error in AuthProvider: ", error);
             } finally {
                 setLoading(false);
@@ -30,6 +31,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [getToken]);
 
     if (loading || !isLoaded) return <div>Loading...</div>;
-    return <div>{children}</div>;
+    return <>{children}</>;
 };
 export default AuthProvider;

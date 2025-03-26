@@ -5,6 +5,7 @@ import HomePage from "./pages/home/HomePage";
 
 import { Toaster } from "react-hot-toast";
 import PracticeSessionPage from "./pages/practice-session/PracticeSessionPage";
+import ScrimPage from "./pages/scrim/ScrimPage";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                         path="session/:sessionId"
                         element={<PracticeSessionPage />}
                     />
+                    <Route path="scrim/:scrimId" element={<ScrimPage />} />
                 </Route>
             </Routes>
             <Toaster />

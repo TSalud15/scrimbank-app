@@ -19,9 +19,10 @@ import {
 } from "@/components/ui/card";
 import { useSessionStore } from "@/stores/useSessionStore";
 import { PracticeSession } from "@/types";
-import { Pencil, Trash2 } from "lucide-react";
+import { Delete, Pencil, Trash2 } from "lucide-react";
 import EditSessionDialog from "./EditSessionDialog";
 import { Link } from "react-router-dom";
+import DeleteSessionDialog from "./DeleteSessionDialog";
 
 type SessionCardProps = {
     session: PracticeSession;
@@ -49,40 +50,10 @@ const SessionCard = ({ session }: SessionCardProps) => {
                         icon={<Pencil />}
                         triggerText="Edit"
                     />
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button variant="destructive">
-                                <Trash2 />
-                                Delete
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>
-                                    Are you absolutely sure?
-                                </AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    This action cannot be undone. This will
-                                    permanently delete the practice session and
-                                    remove any scrims under this session from
-                                    our servers.
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction
-                                    className={buttonVariants({
-                                        variant: "destructive",
-                                    })}
-                                    onClick={() =>
-                                        deletePracticeSession(session._id)
-                                    }
-                                >
-                                    Yes, delete this session
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
+                    <DeleteSessionDialog
+                        deletePracticeSession={deletePracticeSession}
+                        sessionId={session._id}
+                    />
                 </div>
             </CardFooter>
         </Card>
