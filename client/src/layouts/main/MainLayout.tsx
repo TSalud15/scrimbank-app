@@ -13,7 +13,7 @@ const MainLayout = () => {
     }
     return (
         <div className="[--header-height:calc(theme(spacing.14))]">
-            <SidebarProvider className="flex flex-col" defaultOpen={true}>
+            <SidebarProvider className="flex flex-col" defaultOpen={false}>
                 <Topbar />
                 <div className="flex flex-1">
                     <MainSidebar />

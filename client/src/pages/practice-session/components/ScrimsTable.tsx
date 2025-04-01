@@ -48,7 +48,7 @@ const ScrimsTable = ({ scrims }: ScrimsTableProps) => {
                             {new Date(scrim.date).toLocaleDateString()}
                         </TableCell>
                         <TableCell className="text-right">
-                            <div className="flex gap-2 justify-center">
+                            <div className="flex gap-1 justify-center">
                                 <Button variant={"ghost"} size={"sm"} asChild>
                                     <Link to={`/scrim/${scrim._id}`}>
                                         <ExternalLink className="size-4" />

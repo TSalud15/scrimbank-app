@@ -1,36 +1,34 @@
 import { axiosInstance } from "@/lib/axios";
 import { useAuth } from "@clerk/clerk-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-const updateApiToken = (token: string | null) => {
-    if (token)
-        axiosInstance.defaults.headers.common[
-            "Authorization"
-        ] = `Bearer ${token}`;
-    else delete axiosInstance.defaults.headers.common["Authorization"];
-};
+// const updateApiToken = (token: string | null) => {
+//     if (token)
+//         axiosInstance.defaults.headers.common[
+//             "Authorization"
+//         ] = `Bearer ${token}`;
+//     else delete axiosInstance.defaults.headers.common["Authorization"];
+// };
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { getToken, isLoaded } = useAuth();
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const initAuth = async () => {
-            try {
+            axiosInstance.interceptors.request.use(async (config) => {
                 const token = await getToken();
-                updateApiToken(token);
-                console.log("updated token: ", token);
-            } catch (error: any) {
-                updateApiToken(null);
-                console.log("Error in AuthProvider: ", error);
-            } finally {
-                setLoading(false);
-            }
+                if (token) {
+                    // console.log("current token", token);
+                    config.headers["Authorization"] = `Bearer ${token}`;
+                }
+                return config;
+            });
         };
         initAuth();
     }, [getToken]);
 
-    if (loading || !isLoaded) return <div>Loading...</div>;
+    if (!isLoaded) return <div>Loading...</div>;
     return <>{children}</>;
 };
 export default AuthProvider;
