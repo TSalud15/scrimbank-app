@@ -20,6 +20,7 @@ interface SessionStore {
     currentSession: PracticeSession | null;
 
     scrims: Scrim[];
+    currentScrim: Scrim | null;
 
     isLoading: boolean;
     error: string | null;
@@ -33,6 +34,7 @@ interface SessionStore {
     ) => Promise<void>;
     deletePracticeSession: (id: string) => Promise<void>;
 
+    fetchScrimById: (id: string) => Promise<void>;
     addScrim: (sessionId: string | null, scrim: ScrimFormData) => Promise<void>;
     deleteScrim: (id: string) => Promise<void>;
 }
@@ -42,6 +44,7 @@ export const useSessionStore = create<SessionStore>((set) => ({
     practiceSessions: [],
     currentSession: null,
 
+    currentScrim: null,
     scrims: [],
 
     isLoading: false,
@@ -154,6 +157,19 @@ export const useSessionStore = create<SessionStore>((set) => ({
         } catch (error: any) {
             console.log("Error deleting practice session: ", error);
             toast.error("Error deleting practice session");
+            set({ error: error.response.data.message });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    fetchScrimById: async (id) => {
+        set({ isLoading: true, error: null });
+        try {
+            const res = await axiosInstance.get(`/scrims/${id}`);
+            set({ currentScrim: res.data });
+        } catch (error: any) {
+            console.log("Error fetching scrim: ", error);
             set({ error: error.response.data.message });
         } finally {
             set({ isLoading: false });

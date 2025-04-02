@@ -23,7 +23,11 @@ const ScrimsTable = ({ scrims }: ScrimsTableProps) => {
 
     return (
         <Table>
-            <TableCaption>A list of your scrims.</TableCaption>
+            <TableCaption>
+                {scrims.length === 0
+                    ? "No scrims (yet)."
+                    : "A list of your scrims."}
+            </TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-[150px]">Scrim</TableHead>
