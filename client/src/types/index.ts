@@ -26,7 +26,7 @@ export interface Scrim {
             agent: string;
         }
     ];
-    playerScore: number;
+    yourScore: number;
     opponentScore: number;
     screenshots: string[];
     videos: string[];

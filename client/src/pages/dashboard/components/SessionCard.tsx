@@ -1,16 +1,4 @@
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
     Card,
     CardDescription,
     CardFooter,
@@ -19,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { useSessionStore } from "@/stores/useSessionStore";
 import { PracticeSession } from "@/types";
-import { Delete, Pencil, Trash2 } from "lucide-react";
+import { Pencil } from "lucide-react";
 import EditSessionDialog from "./EditSessionDialog";
 import { Link } from "react-router-dom";
 import DeleteSessionDialog from "./DeleteSessionDialog";
